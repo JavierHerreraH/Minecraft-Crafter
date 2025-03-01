@@ -1,0 +1,42 @@
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #87CEEB;
+}
+
+.grid-cell {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    text-align: center;
+}
+
+.item-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.item-img {
+    width: 40px;
+    height: 40px;
+    cursor: grab;
+}
+
+.recipe-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.recipe-item {
+    width: 100px;
+    text-align: center;
+}
+
+.grid-container {
+    width: 150px;
+}
