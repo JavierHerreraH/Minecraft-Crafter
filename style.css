@@ -25,7 +25,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 20px;
 }
 
 .grid-container {
@@ -57,7 +56,7 @@ body {
 #cuadricula1 {
     position: absolute;
     /* Se posiciona sobre la imagen */
-    top: 56%;
+    top: 55%;
     /* Mueve la cuadrícula hacia el centro */
     left: 21%;
     transform: translate(-50%, -50%);
@@ -74,6 +73,24 @@ body {
     /* Agrega más configuraciones específicas para #mesa2 aquí */
 }
 
+#mesa .recipe-list {
+    position: absolute;
+    top: 53%;
+    left: 87%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    /* Puedes ajustar este valor si es necesario */
+    /* Agrega más configuraciones específicas para #mesa2 aquí */
+}
+
+#selected-items{
+    position: absolute;
+    top: 45%;
+    left: 81%;
+    z-index: 1;
+    /* Puedes ajustar este valor si es necesario */
+    /* Agrega más configuraciones específicas para #mesa2 aquí */
+}
 
 #mesa .grid-container .grid {
     display: grid;
@@ -85,7 +102,7 @@ body {
 }
 
 #mesa .grid-container .grid-cell {
-    background: white;
+    background: transparent ;
     border: none;
     aspect-ratio: 1;
     /* Mantiene cada celda cuadrada */
@@ -99,4 +116,110 @@ body {
     /* Ajusta el espacio entre celdas */
     gap: 10px;
     height: auto;
+}
+
+.dependency-list {
+    width: 30%; /* Ajusta el ancho según sea necesario */
+    max-height: 300px; /* Altura máxima para que aparezca el scroll */
+    overflow-y: auto; /* Habilita el scroll vertical */
+    border: 1px solid #ccc; /* Opcional: añade un borde para mejor visibilidad */
+    padding: 10px; /* Espaciado interno */
+    margin-left: 20px; /* Espacio a la izquierda para separarlo de la cuadrícula */
+    margin-top: 80px;
+}
+
+#dependency-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Mantén la cuadrícula de 3 columnas */
+    gap: 10px; /* Espacio entre ítems */
+}
+
+.item-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc; /* Opcional: añade un borde para mejor visibilidad */
+    padding: 10px; /* Espaciado interno */
+}
+
+@media (max-width: 768px) {
+
+    #mesa {
+        background-image: url('./assets/img/Crafting3x3.webp');
+        /* Ruta de la imagen */
+        background-size: contain;
+        /* Ajusta la imagen al tamaño del div */
+        background-repeat: no-repeat;
+        /* Evita que la imagen se repita */
+        background-position: center;
+        /* Centra la imagen */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        /* Permite posicionar elementos dentro */
+        width: 100%;
+        /* Ajusta al ancho del contenedor */
+        max-width: 400px;
+        /* Tamaño máximo opcional */
+        aspect-ratio: 1;
+        /* Mantiene la proporción cuadrada */
+    }
+
+    .dependency-list {
+        width: 100%; /* Ajusta el ancho según sea necesario */
+        max-height: 300px; /* Altura máxima para que aparezca el scroll */
+        overflow-y: auto; /* Habilita el scroll vertical */
+        border: 1px solid #ccc; /* Opcional: añade un borde para mejor visibilidad */
+        padding: 10px; /* Espaciado interno */
+        margin-top: 1px;
+    }
+
+    .grid-cell {
+        width: 45px;
+        height: 45px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        text-align: center;
+    }
+
+    #cuadricula1 {
+        position: absolute;
+        /* Se posiciona sobre la imagen */
+        top: 56%;
+        /* Mueve la cuadrícula hacia el centro */
+        left: 23%;
+        transform: translate(-50%, -50%);
+    }
+    
+    #cuadricula2 {
+        position: absolute;
+        top: 54%;
+        left: 23%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        /* Puedes ajustar este valor si es necesario */
+        /* Agrega más configuraciones específicas para #mesa2 aquí */
+    }
+    
+    #mesa .recipe-list {
+        position: absolute;
+        top: 53%;
+        left: 87%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        /* Puedes ajustar este valor si es necesario */
+        /* Agrega más configuraciones específicas para #mesa2 aquí */
+    }
+    
+    #selected-items{
+        position: absolute;
+        top: 43%;
+        left: 81%;
+        z-index: 1;
+        /* Puedes ajustar este valor si es necesario */
+        /* Agrega más configuraciones específicas para #mesa2 aquí */
+    }
 }

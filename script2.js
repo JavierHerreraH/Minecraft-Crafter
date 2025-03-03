@@ -63,7 +63,31 @@ function displayRecipe(itemId) {
             });
         });
     }
-    
+
+    // Mostrar el ítem seleccionado en la sección selected-items
+    const selectedItemsContainer = document.getElementById('selected-items');
+    selectedItemsContainer.innerHTML = ''; // Limpiar el contenedor antes de añadir el nuevo ítem
+
+    const selectedBlock = blocks.find(b => b.id === itemId);
+    if (selectedBlock) {
+        const selectedItemDiv = document.createElement('div');
+        selectedItemDiv.className = 'selected-item';
+
+        const img = document.createElement('img');
+        img.src = `assets/${selectedBlock.name}.png`;
+        img.alt = selectedBlock.displayName;
+        img.className = 'item-img';
+        img.onerror = () => {
+            img.style.display = 'none';
+            const text = document.createElement('span');
+            text.textContent = selectedBlock.displayName;
+            selectedItemDiv.appendChild(text);
+        };
+
+        selectedItemDiv.appendChild(img);
+        selectedItemsContainer.appendChild(selectedItemDiv);
+    }
+
     showCraftableItems(itemId);
     showDependencies(itemId);
 }
