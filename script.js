@@ -97,7 +97,6 @@ function checkCraftingResult() {
             if (recipe.inShape) {
                 const shape = [].concat(...recipe.inShape);
 
-                // **Contar la cantidad de cada ítem en la receta**
                 let recipeItemCount = {};
                 shape.forEach(item => {
                     if (item !== null) {
@@ -105,17 +104,16 @@ function checkCraftingResult() {
                     }
                 });
 
-                // **Contar la cantidad de cada ítem en la cuadrícula**
                 let gridItemCount = countItems(gridItems);
 
-                // **Validar que no haya más ítems de los permitidos en la receta**
+
                 for (let key in gridItemCount) {
                     if (gridItemCount[key] > (recipeItemCount[key] || 0)) {
-                        return; // No es una receta válida porque hay más ítems de los permitidos
+                        return;
                     }
                 }
 
-                // **Comparar forma**
+
                 const recipeRows = recipe.inShape.length;
                 const recipeCols = recipe.inShape[0].length;
                 let match = false;

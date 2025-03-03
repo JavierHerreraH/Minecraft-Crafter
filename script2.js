@@ -11,12 +11,11 @@ function renderItemList(filter = '') {
     const itemList = document.querySelector('.item-list');
     itemList.innerHTML = '';
     blocks.forEach(item => {
-        // Filtramos los ítems que coincidan con la palabra clave
         if (item.name.toLowerCase().includes(filter.toLowerCase())) {
             const div = document.createElement('div');
             div.className = 'p-2 cursor-pointer hover:bg-gray-200 flex items-center';
             div.onclick = () => displayRecipe(item.id);
-            
+
             const img = document.createElement('img');
             img.src = `assets/${item.name}.png`;
             img.alt = item.displayName;
@@ -27,7 +26,7 @@ function renderItemList(filter = '') {
                 text.textContent = item.displayName;
                 div.appendChild(text);
             };
-            
+
             div.appendChild(img);
             itemList.appendChild(div);
         }
@@ -64,9 +63,8 @@ function displayRecipe(itemId) {
         });
     }
 
-    // Mostrar el ítem seleccionado en la sección selected-items
     const selectedItemsContainer = document.getElementById('selected-items');
-    selectedItemsContainer.innerHTML = ''; // Limpiar el contenedor antes de añadir el nuevo ítem
+    selectedItemsContainer.innerHTML = '';
 
     const selectedBlock = blocks.find(b => b.id === itemId);
     if (selectedBlock) {
@@ -99,7 +97,7 @@ function showCraftableItems(itemId) {
             if (recipe.result === itemId) {
                 const recipeItemDiv = document.createElement('div');
                 recipeItemDiv.className = 'recipe-item';
-                
+
                 const img = document.createElement('img');
                 img.src = `assets/${block.name}.png`;
                 img.alt = block.displayName;
@@ -128,7 +126,7 @@ function showDependencies(itemId) {
                     if (cell === itemId && !seenItems.has(block.id)) {
                         const dependencyItemDiv = document.createElement('div');
                         dependencyItemDiv.className = 'recipe-item cursor-pointer hover:bg-gray-200 flex items-center';
-                        
+
                         const img = document.createElement('img');
                         img.src = `assets/${block.name}.png`;
                         img.alt = block.displayName;
@@ -153,7 +151,6 @@ function showDependencies(itemId) {
     });
 }
 
-// Evento de búsqueda
 document.getElementById('search').addEventListener('input', (e) => {
     const searchText = e.target.value.trim();
     renderItemList(searchText);
