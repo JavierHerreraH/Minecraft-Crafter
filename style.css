@@ -19,11 +19,7 @@ body {
     overflow-y: auto;
 }
 
-.item-img {
-    width: 40px;
-    height: 40px;
-    cursor: grab;
-}
+
 
 .recipe-list {
     display: flex;
@@ -32,11 +28,75 @@ body {
     margin-top: 20px;
 }
 
-.recipe-item {
-    width: 100px;
-    text-align: center;
-}
-
 .grid-container {
     width: 150px;
+}
+
+#mesa {
+    background-image: url('./assets/img/Crafting3x3.webp');
+    /* Ruta de la imagen */
+    background-size: contain;
+    /* Ajusta la imagen al tamaño del div */
+    background-repeat: no-repeat;
+    /* Evita que la imagen se repita */
+    background-position: center;
+    /* Centra la imagen */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    /* Permite posicionar elementos dentro */
+    width: 100%;
+    /* Ajusta al ancho del contenedor */
+    max-width: 400px;
+    /* Tamaño máximo opcional */
+    aspect-ratio: 1;
+    /* Mantiene la proporción cuadrada */
+}
+
+#cuadricula1 {
+    position: absolute;
+    /* Se posiciona sobre la imagen */
+    top: 56%;
+    /* Mueve la cuadrícula hacia el centro */
+    left: 21%;
+    transform: translate(-50%, -50%);
+    /* Ajusta la posición exacta */
+}
+
+#cuadricula2 {
+    position: absolute;
+    top: 54%;
+    left: 21%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    /* Puedes ajustar este valor si es necesario */
+    /* Agrega más configuraciones específicas para #mesa2 aquí */
+}
+
+
+#mesa .grid-container .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    height: auto;
+}
+
+#mesa .grid-container .grid-cell {
+    background: white;
+    border: none;
+    aspect-ratio: 1;
+    /* Mantiene cada celda cuadrada */
+}
+
+.grid-3x3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+    /* Ajusta el espacio entre celdas */
+    gap: 10px;
+    height: auto;
 }

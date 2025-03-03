@@ -20,12 +20,20 @@
     </nav>
 
     <main class="container mx-auto p-4">
-        <div class="grid-container">
-            <div class="grid grid-cols-3 gap-2 mb-4" id="crafting-grid"></div>
+        <div class="flex" id="mesa">
+            <div class="grid-container" id="cuadricula2">
+                <!-- Cuadrícula de crafting -->
+                <div id="crafting-grid" class="grid-3x3"></div>
+            </div>
             <div class="recipe-list" id="craftable-items"></div>
-            <button onclick="resetGrid()" class="bg-red-500 text-white p-2 rounded">Resetear</button>
         </div>
+
+        <!-- Botón para resetear -->
+        <button onclick="resetGrid()" class="bg-red-500 text-white p-2 rounded">Resetear</button>
+        <!-- Barra de búsqueda -->
         <input type="text" id="search" placeholder="Buscar ítem..." class="w-full p-2 mb-4 border rounded">
+
+        <!-- Lista de ítems -->
         <div class="item-list border p-2 mb-4 grid grid-cols-10 gap-2"></div>
     </main>
 

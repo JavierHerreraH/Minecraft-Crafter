@@ -17,18 +17,17 @@
         </div>
     </nav>
     <main class="container mx-auto p-4">
-        <div class="flex">
-            <div class="grid-container mr-4">
+        <div class="flex" id="mesa">
+            <div class="grid-container mr-4" id="cuadricula1">
                 <div class="grid grid-cols-3 gap-2 mb-4" id="crafting-grid">
                     <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
                     <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
                     <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
                 </div>
             </div>
-            <div class="dependency-list w-1/3 pl-4">
-                <h3 class="text-xl mb-4">Ítems que requieren el ítem seleccionado:</h3>
-                <div id="dependency-items" class="grid grid-cols-3 gap-2"></div>
-            </div>
+        </div>
+        <div class="dependency-list w-1/3 pl-4">
+            <div id="dependency-items" class="grid grid-cols-3 gap-2"></div>
         </div>
         <div class="recipe-list" id="craftable-items"></div>
         <input type="text" id="search" placeholder="Buscar ítem..." class="w-full p-2 mb-4 border rounded">
