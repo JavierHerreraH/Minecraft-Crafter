@@ -149,6 +149,14 @@ body {
         aspect-ratio: 1;
     }
 
+    .item-list {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        grid-template-columns: repeat(3, 1fr); /* Máximo 3 columnas */
+    }
+
     .dependency-list {
         width: 100%;
         max-height: 300px;
