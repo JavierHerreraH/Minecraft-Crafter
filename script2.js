@@ -1,25 +1,99 @@
 let blocks = {};
 let recipes = {};
 
+// Crear un tooltip global y agregarlo al body
+const tooltip = document.createElement('div');
+tooltip.className = 'tooltip fixed bg-black text-white text-sm px-2 py-1 rounded opacity-0 transition-opacity duration-200 pointer-events-none';
+tooltip.setAttribute('role', 'tooltip');
+document.body.appendChild(tooltip);
+
+// Función para mostrar tooltip en cualquier imagen de ítem
+function enableTooltipForImages() {
+    document.querySelectorAll('.item-img').forEach(img => {
+        img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de las listas
+        img.setAttribute('role', 'button');
+
+        img.onmousemove = (event) => {
+            tooltip.style.opacity = '1';
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY - 10}px`;
+            tooltip.textContent = img.alt;
+        };
+
+        img.onmouseleave = () => {
+            tooltip.style.opacity = '0';
+        };
+
+        img.onfocus = () => {
+            tooltip.style.opacity = '1';
+            tooltip.style.left = `${img.getBoundingClientRect().right + 10}px`;
+            tooltip.style.top = `${img.getBoundingClientRect().top}px`;
+            tooltip.textContent = img.alt;
+            img.classList.add('focused'); // Resaltar el elemento enfocado
+        };
+
+        img.onblur = () => {
+            tooltip.style.opacity = '0';
+            img.classList.remove('focused'); // Quitar el resaltado
+        };
+
+        img.onkeydown = (event) => {
+            if (event.key === 'Enter') {
+                const itemId = img.closest('.item').dataset.itemId;
+                if (itemId) displayRecipe(itemId);
+            }
+        };
+    });
+}
+
+// Cargar los datos JSON
 async function loadJSON() {
     blocks = await fetch('./json/block.json').then(res => res.json());
     recipes = await fetch('./json/recipe.json').then(res => res.json());
     renderItemList();
 }
 
+// Renderizar lista de ítems
 function renderItemList(filter = '') {
     const itemList = document.querySelector('.item-list');
     itemList.innerHTML = '';
+
     blocks.forEach(item => {
         if (item.name.toLowerCase().includes(filter.toLowerCase())) {
             const div = document.createElement('div');
-            div.className = 'p-2 cursor-pointer hover:bg-gray-200 flex items-center';
+            div.className = 'item p-2 cursor-pointer hover:bg-gray-200 flex items-center';
+            div.dataset.itemId = item.id;
+            div.setAttribute('tabindex', '0'); // Habilitar tab solo en el contenedor de la lista
+            div.setAttribute('role', 'button');
+
             div.onclick = () => displayRecipe(item.id);
+
+            div.onkeydown = (event) => {
+                if (event.key === 'Enter') {
+                    displayRecipe(item.id);
+                } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                    // Navegar con flechas izquierda/derecha en la lista
+                    const items = Array.from(document.querySelectorAll('.item'));
+                    const currentIndex = items.indexOf(div);
+                    let nextIndex;
+
+                    if (event.key === 'ArrowRight') {
+                        nextIndex = currentIndex + 1;
+                        if (nextIndex >= items.length) nextIndex = 0; // Circular
+                    } else if (event.key === 'ArrowLeft') {
+                        nextIndex = currentIndex - 1;
+                        if (nextIndex < 0) nextIndex = items.length - 1; // Circular
+                    }
+
+                    items[nextIndex].focus();
+                }
+            };
 
             const img = document.createElement('img');
             img.src = `assets/${item.name}.png`;
             img.alt = item.displayName;
             img.className = 'item-img mr-2';
+
             img.onerror = () => {
                 img.style.display = 'none';
                 const text = document.createElement('span');
@@ -31,16 +105,21 @@ function renderItemList(filter = '') {
             itemList.appendChild(div);
         }
     });
+
+    enableTooltipForImages();
 }
 
+// Mostrar receta de un ítem
 function displayRecipe(itemId) {
     const gridCells = document.querySelectorAll('.grid-cell');
     gridCells.forEach(cell => cell.innerHTML = '');
     document.getElementById('craftable-items').innerHTML = '';
     document.getElementById('dependency-items').innerHTML = '';
+    document.getElementById('selected-items').innerHTML = '';
 
     if (!recipes[itemId]) return;
     const recipe = recipes[itemId][0];
+
     if (recipe.inShape) {
         recipe.inShape.forEach((row, rowIndex) => {
             row.forEach((cell, colIndex) => {
@@ -51,12 +130,16 @@ function displayRecipe(itemId) {
                     img.src = `assets/${block.name}.png`;
                     img.alt = block.displayName;
                     img.className = 'item-img';
+                    img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la cuadrícula
+                    img.setAttribute('role', 'button');
+
                     img.onerror = () => {
                         img.style.display = 'none';
                         const text = document.createElement('span');
                         text.textContent = block.displayName;
                         gridCells[index].appendChild(text);
                     };
+
                     gridCells[index].appendChild(img);
                 }
             });
@@ -64,7 +147,6 @@ function displayRecipe(itemId) {
     }
 
     const selectedItemsContainer = document.getElementById('selected-items');
-    selectedItemsContainer.innerHTML = '';
 
     const selectedBlock = blocks.find(b => b.id === itemId);
     if (selectedBlock) {
@@ -75,6 +157,9 @@ function displayRecipe(itemId) {
         img.src = `assets/${selectedBlock.name}.png`;
         img.alt = selectedBlock.displayName;
         img.className = 'item-img';
+        img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la lista
+        img.setAttribute('role', 'button');
+
         img.onerror = () => {
             img.style.display = 'none';
             const text = document.createElement('span');
@@ -88,8 +173,10 @@ function displayRecipe(itemId) {
 
     showCraftableItems(itemId);
     showDependencies(itemId);
+    enableTooltipForImages();
 }
 
+// Mostrar ítems que se pueden craftear con el seleccionado
 function showCraftableItems(itemId) {
     const craftableItemsContainer = document.getElementById('craftable-items');
     blocks.forEach(block => {
@@ -102,19 +189,26 @@ function showCraftableItems(itemId) {
                 img.src = `assets/${block.name}.png`;
                 img.alt = block.displayName;
                 img.className = 'item-img';
+                img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la lista
+                img.setAttribute('role', 'button');
+
                 img.onerror = () => {
                     img.style.display = 'none';
                     const text = document.createElement('span');
                     text.textContent = block.displayName;
                     recipeItemDiv.appendChild(text);
                 };
+
                 recipeItemDiv.appendChild(img);
                 craftableItemsContainer.appendChild(recipeItemDiv);
             }
         });
     });
+
+    enableTooltipForImages();
 }
 
+// Mostrar los ítems que dependen del seleccionado
 function showDependencies(itemId) {
     const dependencyItemsContainer = document.getElementById('dependency-items');
     const seenItems = new Set();
@@ -126,11 +220,16 @@ function showDependencies(itemId) {
                     if (cell === itemId && !seenItems.has(block.id)) {
                         const dependencyItemDiv = document.createElement('div');
                         dependencyItemDiv.className = 'recipe-item cursor-pointer hover:bg-gray-200 flex items-center';
+                        dependencyItemDiv.setAttribute('tabindex', '0'); // Habilitar tab solo en el contenedor de la lista
+                        dependencyItemDiv.setAttribute('role', 'button');
 
                         const img = document.createElement('img');
                         img.src = `assets/${block.name}.png`;
                         img.alt = block.displayName;
                         img.className = 'item-img';
+                        img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la lista
+                        img.setAttribute('role', 'button');
+
                         img.onerror = () => {
                             img.style.display = 'none';
                             const text = document.createElement('span');
@@ -139,6 +238,26 @@ function showDependencies(itemId) {
                         };
 
                         dependencyItemDiv.onclick = () => displayRecipe(block.id);
+
+                        dependencyItemDiv.onkeydown = (event) => {
+                            if (event.key === 'Enter') {
+                                displayRecipe(block.id);
+                            } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                                const items = Array.from(document.querySelectorAll('.recipe-item'));
+                                const currentIndex = items.indexOf(dependencyItemDiv);
+                                let nextIndex;
+
+                                if (event.key === 'ArrowRight') {
+                                    nextIndex = currentIndex + 1;
+                                    if (nextIndex >= items.length) nextIndex = 0; // Circular
+                                } else if (event.key === 'ArrowLeft') {
+                                    nextIndex = currentIndex - 1;
+                                    if (nextIndex < 0) nextIndex = items.length - 1; // Circular
+                                }
+
+                                items[nextIndex].focus();
+                            }
+                        };
 
                         dependencyItemDiv.appendChild(img);
                         dependencyItemsContainer.appendChild(dependencyItemDiv);
@@ -149,11 +268,15 @@ function showDependencies(itemId) {
             });
         });
     });
+
+    enableTooltipForImages();
 }
 
+// Evento de búsqueda en la lista
 document.getElementById('search').addEventListener('input', (e) => {
     const searchText = e.target.value.trim();
     renderItemList(searchText);
 });
 
+// Cargar datos JSON al inicio
 loadJSON();

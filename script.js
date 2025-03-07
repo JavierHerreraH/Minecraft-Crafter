@@ -1,7 +1,30 @@
 let blocks = {};
 let recipes = {};
 let gridState = Array(9).fill(null);
+let selectedItem = null; // Variable para almacenar el ítem seleccionado en dispositivos táctiles
+let isTouchDevice = 'ontouchstart' in window; // Detectar si es un dispositivo táctil
 
+// Crear el tooltip global y agregarlo al body
+const tooltip = document.createElement('div');
+tooltip.className = 'tooltip fixed bg-black text-white text-sm px-2 py-1 rounded opacity-0 transition-opacity duration-200 pointer-events-none';
+document.body.appendChild(tooltip);
+
+// Función para habilitar tooltip en imágenes de ítems
+function enableTooltipForImages() {
+    document.querySelectorAll('.item-img').forEach(img => {
+        img.onmousemove = (event) => {
+            tooltip.style.opacity = '1';
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY - 10}px`;
+            tooltip.textContent = img.alt;
+        };
+        img.onmouseleave = () => {
+            tooltip.style.opacity = '0';
+        };
+    });
+}
+
+// Cargar JSON y renderizar contenido
 async function loadJSON() {
     blocks = await fetch('./json/block.json').then(res => res.json());
     recipes = await fetch('./json/recipe.json').then(res => res.json());
@@ -16,8 +39,43 @@ function renderItemList(filter = '') {
         if (item.name.toLowerCase().includes(filter.toLowerCase())) {
             const div = document.createElement('div');
             div.className = 'p-2 cursor-pointer hover:bg-gray-200 flex items-center';
-            div.draggable = true;
-            div.ondragstart = (event) => drag(event, item.id);
+            div.setAttribute('tabindex', '0'); // Habilitar tab solo en el contenedor de la lista
+            div.setAttribute('role', 'button');
+
+            if (isTouchDevice) {
+                // Comportamiento para dispositivos táctiles
+                div.onclick = () => {
+                    selectedItem = item.id; // Seleccionar el ítem al hacer clic
+                    document.querySelectorAll('.item-list > div').forEach(el => el.classList.remove('bg-blue-200'));
+                    div.classList.add('bg-blue-200');
+                };
+            } else {
+                // Comportamiento para PC (arrastrar y soltar)
+                div.draggable = true;
+                div.ondragstart = (event) => drag(event, item.id);
+            }
+
+            div.onkeydown = (event) => {
+                if (event.key === 'Enter') {
+                    const itemId = item.id;
+                    if (itemId) displayRecipe(itemId);
+                } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                    // Navegar con flechas izquierda/derecha en la lista
+                    const items = Array.from(document.querySelectorAll('.item-list > div'));
+                    const currentIndex = items.indexOf(div);
+                    let nextIndex;
+
+                    if (event.key === 'ArrowRight') {
+                        nextIndex = currentIndex + 1;
+                        if (nextIndex >= items.length) nextIndex = 0; // Circular
+                    } else if (event.key === 'ArrowLeft') {
+                        nextIndex = currentIndex - 1;
+                        if (nextIndex < 0) nextIndex = items.length - 1; // Circular
+                    }
+
+                    items[nextIndex].focus();
+                }
+            };
 
             const img = document.createElement('img');
             img.src = `assets/${item.name}.png`;
@@ -27,6 +85,8 @@ function renderItemList(filter = '') {
             itemList.appendChild(div);
         }
     });
+
+    enableTooltipForImages(); // Activar tooltip en los ítems de la lista
 }
 
 function renderGrid() {
@@ -35,8 +95,53 @@ function renderGrid() {
     gridState.forEach((itemId, index) => {
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
-        cell.ondrop = (event) => drop(event, index);
-        cell.ondragover = (event) => allowDrop(event);
+        cell.setAttribute('tabindex', '0'); // Habilitar tab en las celdas de la cuadrícula
+        cell.setAttribute('role', 'button');
+
+        if (isTouchDevice) {
+            // Comportamiento para dispositivos táctiles
+            cell.onclick = () => {
+                if (selectedItem !== null) {
+                    gridState[index] = selectedItem; // Colocar el ítem seleccionado en la celda
+                    selectedItem = null; // Deseleccionar el ítem
+                    document.querySelectorAll('.item-list > div').forEach(el => el.classList.remove('bg-blue-200'));
+                    renderGrid();
+                }
+            };
+        } else {
+            // Comportamiento para PC (arrastrar y soltar)
+            cell.ondrop = (event) => drop(event, index);
+            cell.ondragover = (event) => allowDrop(event);
+        }
+
+        cell.onkeydown = (event) => {
+            if (event.key === 'Enter') {
+                const itemId = gridState[index];
+                if (itemId) displayRecipe(itemId);
+            } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft' || event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                // Navegar con flechas en la cuadrícula
+                const cells = Array.from(document.querySelectorAll('.grid-cell'));
+                const currentIndex = cells.indexOf(cell);
+                let nextIndex;
+
+                if (event.key === 'ArrowRight') {
+                    nextIndex = currentIndex + 1;
+                    if (nextIndex >= cells.length) nextIndex = 0; // Circular
+                } else if (event.key === 'ArrowLeft') {
+                    nextIndex = currentIndex - 1;
+                    if (nextIndex < 0) nextIndex = cells.length - 1; // Circular
+                } else if (event.key === 'ArrowDown') {
+                    nextIndex = currentIndex + 3;
+                    if (nextIndex >= cells.length) nextIndex = currentIndex % 3; // Circular
+                } else if (event.key === 'ArrowUp') {
+                    nextIndex = currentIndex - 3;
+                    if (nextIndex < 0) nextIndex = cells.length - 3 + (currentIndex % 3); // Circular
+                }
+
+                cells[nextIndex].focus();
+            }
+        };
+
         if (itemId) {
             const block = blocks.find(b => b.id === itemId);
             if (block) {
@@ -49,6 +154,8 @@ function renderGrid() {
         }
         grid.appendChild(cell);
     });
+
+    enableTooltipForImages(); // Activar tooltip en los ítems dentro de la cuadrícula
     checkCraftingResult();
 }
 
@@ -106,13 +213,11 @@ function checkCraftingResult() {
 
                 let gridItemCount = countItems(gridItems);
 
-
                 for (let key in gridItemCount) {
                     if (gridItemCount[key] > (recipeItemCount[key] || 0)) {
                         return;
                     }
                 }
-
 
                 const recipeRows = recipe.inShape.length;
                 const recipeCols = recipe.inShape[0].length;
@@ -153,6 +258,8 @@ function checkCraftingResult() {
         img.className = 'item-img';
         resultContainer.appendChild(img);
     }
+
+    enableTooltipForImages(); // Activar tooltip en el resultado del crafteo
 }
 
 document.getElementById('search').addEventListener('input', (e) => {
