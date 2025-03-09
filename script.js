@@ -1,15 +1,13 @@
 let blocks = {};
 let recipes = {};
 let gridState = Array(9).fill(null);
-let selectedItem = null; // Variable para almacenar el ítem seleccionado en dispositivos táctiles
-let isTouchDevice = 'ontouchstart' in window; // Detectar si es un dispositivo táctil
+let selectedItem = null;
+let isTouchDevice = 'ontouchstart' in window;
 
-// Crear el tooltip global y agregarlo al body
 const tooltip = document.createElement('div');
 tooltip.className = 'tooltip fixed bg-black text-white text-sm px-2 py-1 rounded opacity-0 transition-opacity duration-200 pointer-events-none';
 document.body.appendChild(tooltip);
 
-// Función para habilitar tooltip en imágenes de ítems
 function enableTooltipForImages() {
     document.querySelectorAll('.item-img').forEach(img => {
         img.onmousemove = (event) => {
@@ -24,7 +22,6 @@ function enableTooltipForImages() {
     });
 }
 
-// Cargar JSON y renderizar contenido
 async function loadJSON() {
     blocks = await fetch('./json/block.json').then(res => res.json());
     recipes = await fetch('./json/recipe.json').then(res => res.json());
@@ -39,18 +36,16 @@ function renderItemList(filter = '') {
         if (item.name.toLowerCase().includes(filter.toLowerCase())) {
             const div = document.createElement('div');
             div.className = 'p-2 cursor-pointer hover:bg-gray-200 flex items-center';
-            div.setAttribute('tabindex', '0'); // Habilitar tab solo en el contenedor de la lista
+            div.setAttribute('tabindex', '0');
             div.setAttribute('role', 'button');
 
             if (isTouchDevice) {
-                // Comportamiento para dispositivos táctiles
                 div.onclick = () => {
-                    selectedItem = item.id; // Seleccionar el ítem al hacer clic
+                    selectedItem = item.id;
                     document.querySelectorAll('.item-list > div').forEach(el => el.classList.remove('bg-blue-200'));
                     div.classList.add('bg-blue-200');
                 };
             } else {
-                // Comportamiento para PC (arrastrar y soltar)
                 div.draggable = true;
                 div.ondragstart = (event) => drag(event, item.id);
             }
@@ -60,17 +55,16 @@ function renderItemList(filter = '') {
                     const itemId = item.id;
                     if (itemId) displayRecipe(itemId);
                 } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-                    // Navegar con flechas izquierda/derecha en la lista
                     const items = Array.from(document.querySelectorAll('.item-list > div'));
                     const currentIndex = items.indexOf(div);
                     let nextIndex;
 
                     if (event.key === 'ArrowRight') {
                         nextIndex = currentIndex + 1;
-                        if (nextIndex >= items.length) nextIndex = 0; // Circular
+                        if (nextIndex >= items.length) nextIndex = 0;
                     } else if (event.key === 'ArrowLeft') {
                         nextIndex = currentIndex - 1;
-                        if (nextIndex < 0) nextIndex = items.length - 1; // Circular
+                        if (nextIndex < 0) nextIndex = items.length - 1;
                     }
 
                     items[nextIndex].focus();
@@ -155,7 +149,7 @@ function renderGrid() {
         grid.appendChild(cell);
     });
 
-    enableTooltipForImages(); // Activar tooltip en los ítems dentro de la cuadrícula
+    enableTooltipForImages();
     checkCraftingResult();
 }
 
@@ -259,7 +253,7 @@ function checkCraftingResult() {
         resultContainer.appendChild(img);
     }
 
-    enableTooltipForImages(); // Activar tooltip en el resultado del crafteo
+    enableTooltipForImages();
 }
 
 document.getElementById('search').addEventListener('input', (e) => {

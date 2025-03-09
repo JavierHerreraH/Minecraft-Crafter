@@ -140,7 +140,7 @@ function displayRecipe(itemId) {
                     img.src = `assets/${block.name}.png`;
                     img.alt = block.displayName;
                     img.className = 'item-img';
-                    img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la cuadrícula
+                    img.setAttribute('tabindex', '-1');
                     img.setAttribute('role', 'button');
 
                     img.onerror = () => {
@@ -167,7 +167,7 @@ function displayRecipe(itemId) {
         img.src = `assets/${selectedBlock.name}.png`;
         img.alt = selectedBlock.displayName;
         img.className = 'item-img';
-        img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la lista
+        img.setAttribute('tabindex', '-1');
         img.setAttribute('role', 'button');
 
         img.onerror = () => {
@@ -186,7 +186,6 @@ function displayRecipe(itemId) {
     enableTooltipForImages();
 }
 
-// Mostrar ítems que se pueden craftear con el seleccionado
 function showCraftableItems(itemId) {
     const craftableItemsContainer = document.getElementById('craftable-items');
     blocks.forEach(block => {
@@ -199,7 +198,7 @@ function showCraftableItems(itemId) {
                 img.src = `assets/${block.name}.png`;
                 img.alt = block.displayName;
                 img.className = 'item-img';
-                img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la lista
+                img.setAttribute('tabindex', '-1');
                 img.setAttribute('role', 'button');
 
                 img.onerror = () => {
@@ -218,7 +217,6 @@ function showCraftableItems(itemId) {
     enableTooltipForImages();
 }
 
-// Mostrar los ítems que dependen del seleccionado
 function showDependencies(itemId) {
     const dependencyItemsContainer = document.getElementById('dependency-items');
     const seenItems = new Set();
@@ -230,14 +228,14 @@ function showDependencies(itemId) {
                     if (cell === itemId && !seenItems.has(block.id)) {
                         const dependencyItemDiv = document.createElement('div');
                         dependencyItemDiv.className = 'recipe-item cursor-pointer hover:bg-gray-200 flex items-center';
-                        dependencyItemDiv.setAttribute('tabindex', '0'); // Habilitar tab solo en el contenedor de la lista
+                        dependencyItemDiv.setAttribute('tabindex', '0');
                         dependencyItemDiv.setAttribute('role', 'button');
 
                         const img = document.createElement('img');
                         img.src = `assets/${block.name}.png`;
                         img.alt = block.displayName;
                         img.className = 'item-img';
-                        img.setAttribute('tabindex', '-1'); // Deshabilitar tab dentro de la lista
+                        img.setAttribute('tabindex', '-1');
                         img.setAttribute('role', 'button');
 
                         img.onerror = () => {
@@ -259,10 +257,10 @@ function showDependencies(itemId) {
 
                                 if (event.key === 'ArrowRight') {
                                     nextIndex = currentIndex + 1;
-                                    if (nextIndex >= items.length) nextIndex = 0; // Circular
+                                    if (nextIndex >= items.length) nextIndex = 0;
                                 } else if (event.key === 'ArrowLeft') {
                                     nextIndex = currentIndex - 1;
-                                    if (nextIndex < 0) nextIndex = items.length - 1; // Circular
+                                    if (nextIndex < 0) nextIndex = items.length - 1;
                                 }
 
                                 items[nextIndex].focus();
@@ -282,11 +280,9 @@ function showDependencies(itemId) {
     enableTooltipForImages();
 }
 
-// Evento de búsqueda en la lista
 document.getElementById('search').addEventListener('input', (e) => {
     const searchText = e.target.value.trim();
     renderItemList(searchText);
 });
 
-// Cargar datos JSON al inicio
 loadJSON();

@@ -1,0 +1,13 @@
+Mi web tenía algunos problemas de accesibilidad, que he conseguido resolver para esta entrega.
+
+1. La función de arrastrar no funcionaba en smartphones por lo que para esta versión si quería que fuera accesible para estos necesite solucionarlo, 
+cambie el modo en que se colocan los ítems haciendo que se pueda apretar en ellos y después apretar en la zona de la cuadrícula que gustes para poner el 
+ítem en su lugar ¡¡¡¡Cosas que tener en cuenta: El js esta hecho para que cuando inicia compruebe si es un smartphone o es un pc, por esa razón si en inspeccionar 
+código de Google intentas comprobar si funciona tendrás que reiniciar la página para que detecte que es un smartphone.!!!!!!
+
+2. Hacer que la lista de ítems sea más fácil de ver y entender, he añadido pequeñas etiquetas a cada bloque para 
+que así sea más compresible que ítem estás seleccionando. También en el apartado de Crafteos he hecho que los ítems que no tienen 
+crafteo o receta tengan una x para así hacer comprender que es incrafteable.
+He hecho algunos arreglos en el responsive para que cuando está en dispositivos móviles la cuadrícula reduzca su número de 
+columnas para así que se vean más grandes los ítems y saber que estás seleccionando también añadir padding-bottom para así hacer que la lista 
+no desaparezca o sea inaccesible cuando la lista de ítems de dependencias aparezca.
