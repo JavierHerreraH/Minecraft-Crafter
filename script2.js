@@ -61,7 +61,7 @@ function renderItemList(filter = '') {
     blocks.forEach(item => {
         if (item.name.toLowerCase().includes(filter.toLowerCase())) {
             const div = document.createElement('div');
-            div.className = 'item p-2 cursor-pointer hover:bg-gray-200 flex items-center';
+            div.className = 'item p-2 cursor-pointer hover:bg-gray-200 flex items-center relative'; // Agregar 'relative' para posicionar la imagen de "no receta"
             div.dataset.itemId = item.id;
             div.setAttribute('tabindex', '0'); // Habilitar tab solo en el contenedor de la lista
             div.setAttribute('role', 'button');
@@ -102,6 +102,16 @@ function renderItemList(filter = '') {
             };
 
             div.appendChild(img);
+
+            // Verificar si el ítem tiene receta
+            if (!recipes[item.id]) {
+                const noRecipeImg = document.createElement('img');
+                noRecipeImg.src = 'assets/img/x.webp'; // Ruta de la imagen de "no receta"
+                noRecipeImg.alt = 'No recipe';
+                noRecipeImg.className = 'no-recipe-img absolute top-0 right-0 w-4 h-4'; // Estilos para posicionar la imagen
+                div.appendChild(noRecipeImg);
+            }
+
             itemList.appendChild(div);
         }
     });

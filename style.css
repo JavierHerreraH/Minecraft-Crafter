@@ -4,19 +4,44 @@ body {
 }
 
 .grid-cell {
-    width: 50px;
-    height: 50px;
-    border: 1px solid black;
+
+    width: 48px;
+    /* Ancho fijo */
+    height: 48px;
+    /* Alto fijo */
     display: flex;
     align-items: center;
+    /* Centrar verticalmente */
     justify-content: center;
-    background-color: white;
-    text-align: center;
+    /* Centrar horizontalmente */
+    border: 1px solid #ccc;
+    /* Borde para visualizar la cuadrícula */
+    box-sizing: border-box;
+    /* Incluir el borde en el tamaño total */
 }
 
 .item-list {
     max-height: 300px;
     overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Centrar horizontalmente */
+    align-items: center;
+    /* Centrar verticalmente */
+}
+
+.item-list .item {
+    width: 100px;
+    /* Mismo ancho que los ítems de la cuadrícula */
+    height: 100px;
+    /* Mismo alto que los ítems de la cuadrícula */
+    display: flex;
+    align-items: center;
+    /* Centrar verticalmente */
+    justify-content: center;
+    /* Centrar horizontalmente */
 }
 
 
@@ -58,7 +83,7 @@ body {
 
     top: 55%;
 
-    left: 21%;
+    left: 22%;
     transform: translate(-50%, -50%);
 
 }
@@ -66,7 +91,7 @@ body {
 #cuadricula2 {
     position: absolute;
     top: 54%;
-    left: 21%;
+    left: 22%;
     transform: translate(-50%, -50%);
     z-index: 1;
 }
@@ -79,7 +104,7 @@ body {
     z-index: 1;
 }
 
-#selected-items{
+#selected-items {
     position: absolute;
     top: 45%;
     left: 81%;
@@ -96,7 +121,7 @@ body {
 }
 
 #mesa .grid-container .grid-cell {
-    background: transparent ;
+    background: transparent;
     border: none;
     aspect-ratio: 1;
 }
@@ -154,7 +179,9 @@ body {
         overflow-y: auto;
         border: 1px solid #ccc;
         padding: 10px;
-        grid-template-columns: repeat(3, 1fr); /* Máximo 3 columnas */
+        grid-template-columns: repeat(3, 1fr);
+        /* Máximo 3 columnas */
+        padding-bottom: 200px;
     }
 
     .dependency-list {
@@ -183,7 +210,7 @@ body {
         left: 23%;
         transform: translate(-50%, -50%);
     }
-    
+
     #cuadricula2 {
         position: absolute;
         top: 54%;
@@ -191,7 +218,7 @@ body {
         transform: translate(-50%, -50%);
         z-index: 1;
     }
-    
+
     #mesa .recipe-list {
         position: absolute;
         top: 53%;
@@ -199,13 +226,13 @@ body {
         transform: translate(-50%, -50%);
         z-index: 1;
     }
-    
-    #selected-items{
+
+    #selected-items {
         position: absolute;
         top: 43%;
         left: 81%;
         z-index: 1;
     }
 
-    
+
 }
